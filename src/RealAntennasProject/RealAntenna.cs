@@ -30,7 +30,7 @@ namespace RealAntennas
         public virtual double Beamwidth => Physics.Beamwidth(Gain);
 
         internal double cachedRemoteBodyNoiseTemp;
-        public virtual double GainAtAngle(double angle) => Gain - Physics.PointingLoss(angle, Beamwidth);
+        public virtual double GainAtAngle(double angle) => Gain - Physics.PointingLoss(Math.Abs(angle), Beamwidth);
         // Beamwidth is the 3dB full beamwidth contour, ~= the offset angle to the 10dB contour.
         // 10dBi: Beamwidth = 72 = 4dB full beamwidth contour
         // 10dBi @ .6 efficiency: 57 = 3dB full beamwidth contour
@@ -40,6 +40,7 @@ namespace RealAntennas
         public virtual double RequiredCI => Encoder.RequiredEbN0;
 
         public ModuleRealAntenna Parent { get; internal set; }
+        public ProtoPartModuleSnapshot ParentSnapshot { get; internal set; } = null;
         public CommNet.CommNode ParentNode { get; set; }
         public Vector3d Position => PrecisePosition;
         public Vector3d PrecisePosition => ParentNode.precisePosition;
@@ -63,8 +64,8 @@ namespace RealAntennas
         }
 
         public string TargetID { get; set; }
-        private ITargetable _target = null;
-        public ITargetable Target
+        private object _target = null;
+        public object Target
         {
             get => _target;
             set
@@ -72,9 +73,15 @@ namespace RealAntennas
                 if (!CanTarget || value is null) SetTarget(null, DefaultTargetName, DefaultTargetName);
                 else if (value is Vessel v) SetTarget(v, v.name, v.id.ToString());
                 else if (value is CelestialBody body) SetTarget(body, body.name, body.name);
+                else if (value is Network.RACommNetHome home) SetTarget(home, home.name, home.name);
                 else Debug.LogWarningFormat($"{ModTag} Tried to set antenna target to {value} and failed");
             }
         }
+
+        public string TargetString => (Target is Vessel v) ? v.vesselName :
+                                      (Target is CelestialBody b) ? b.name :
+                                      (Target is Network.RACommNetHome h) ? h.name :
+                                      string.Empty;
 
         public double PowerDraw => RATools.LogScale(PowerDrawLinear);
 //        public virtual double IdlePowerDraw => PowerDrawLinear * 1e-6 * ModuleRealAntenna.InactivePowerConsumptionMult;
@@ -88,6 +95,7 @@ namespace RealAntennas
         private readonly double minimumSpotRadius = 1e3;
 
         public override string ToString() => $"[+RA] {Name} [{Gain:F1} dBi {RFBand.name} {TxPower} dBm [TL:{TechLevelInfo.Level:N0}]] {(CanTarget ? $" ->{Target}" : null)}";
+        public virtual string ToStringShort() => $"{Name} [{RFBand.name} {TxPower} dBm] {(CanTarget ? $" ->{TargetString}" : null)}";
 
         public RealAntenna() : this("New RealAntennaDigital") { }
         public RealAntenna(string name, double dataRate = 1000)
@@ -95,6 +103,7 @@ namespace RealAntennas
             Name = name;
             DataRate = dataRate;
             TechLevelInfo = TechLevelInfo.GetTechLevel(0);
+            RFBand ??= Antenna.BandInfo.Get(Antenna.BandInfo.All.Keys.FirstOrDefault() ?? Antenna.BandInfo.DefaultBand);
         }
         public RealAntenna(RealAntenna orig)
         {
@@ -111,6 +120,7 @@ namespace RealAntennas
             Target = orig.Target;
             Parent = orig.Parent;
             ParentNode = orig.ParentNode;
+            ParentSnapshot = orig.ParentSnapshot;
         }
 
         public virtual bool Compatible(RealAntenna other) => RFBand == other.RFBand;
@@ -205,10 +215,11 @@ namespace RealAntennas
             return null;
         }
 
-        private void SetTarget(ITargetable tgt, string dispString, string tgtId)
+        private void SetTarget(object tgt, string dispString, string tgtId)
         {
             _target = tgt; TargetID = tgtId;
             if (Parent is ModuleRealAntenna) { Parent.sAntennaTarget = dispString; Parent.targetID = tgtId; }
+            ParentSnapshot?.moduleValues.SetValue("targetID", tgtId);
         }
     }
 
