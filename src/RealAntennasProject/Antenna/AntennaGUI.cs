@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using KSP.Localization;
 
 namespace RealAntennas.Antenna
 {
@@ -30,13 +31,13 @@ namespace RealAntennas.Antenna
         {
             if (showGUI)
             {
-                Window = GUILayout.Window(GetHashCode(), Window, GUIDisplay, $"{ParentPart.partName} Antenna Targeting", GUILayout.Width(200), GUILayout.Height(200));
+                Window = GUILayout.Window(GetHashCode(), Window, GUIDisplay, Localizer.Format("#RealAntennas_ParentPartTargeting", ParentPart.partName), GUILayout.Width(200), GUILayout.Height(200));//$"{ParentPart.partName} Antenna Targeting"
             }
         }
 
         void GUIDisplay(int windowID)
         {
-            if (GUILayout.Button($"Sort Mode: {sortMode}"))
+            if (GUILayout.Button(Localizer.Format("#RealAntennas_SortMode", sortMode)))//$"Sort Mode: {}"
             {
                 sortMode = (SortMode)(((int)(sortMode + 1)) % System.Enum.GetNames(typeof(SortMode)).Length);
                 switch (sortMode)
@@ -47,7 +48,7 @@ namespace RealAntennas.Antenna
                     case SortMode.RFBand: vessels.Sort(new RFBandComparer()); break;
                 }
             }
-            if (GUILayout.Button("Show Vessels")) showVessels = !showVessels;
+            if (GUILayout.Button(Localizer.Format("#RealAntennas_Button_ShowVessels"))) showVessels = !showVessels;//"Show Vessels"
             if (showVessels)
             {
                 scrollVesselPos = GUILayout.BeginScrollView(scrollVesselPos, GUILayout.Width(200), GUILayout.Height(200));
@@ -60,7 +61,7 @@ namespace RealAntennas.Antenna
                 }
                 GUILayout.EndScrollView();
             }
-            if (GUILayout.Button("Show Bodies")) showBodies = !showBodies;
+            if (GUILayout.Button(Localizer.Format("#RealAntennas_Button_ShowBodies"))) showBodies = !showBodies;//"Show Bodies"
             if (showBodies)
             {
                 scrollBodyPos = GUILayout.BeginScrollView(scrollBodyPos, GUILayout.Width(200), GUILayout.Height(200));
@@ -73,7 +74,7 @@ namespace RealAntennas.Antenna
                 }
                 GUILayout.EndScrollView();
             }
-            if (GUILayout.Button("Close")) showGUI = false;
+            if (GUILayout.Button(Localizer.Format("#RealAntennas_Button_Close"))) showGUI = false;//"Close"
             GUI.DragWindow();
         }
 

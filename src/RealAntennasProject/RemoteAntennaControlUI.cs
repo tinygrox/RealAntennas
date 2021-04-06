@@ -5,12 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using KSP.Localization;
 
 namespace RealAntennas
 {
     class RemoteAntennaControlUI : MonoBehaviour
     {
-        const string GUIName = "Antenna Control Center";
+        const string GUIName = "#RealAntennas_AntennaControlCenter_title";//"Antenna Control Center"
         private Rect Window = new Rect(100, 100, 800, 500);
         private Vector2 scrollSourcePos, scrollTargetPos;
         private enum SortMode { Alphabetical, VesselType, ParentBody, RFBand };
@@ -40,17 +41,17 @@ namespace RealAntennas
         public void OnGUI()
         {
             GUI.skin = HighLogic.Skin;
-            Window = GUILayout.Window(GetHashCode(), Window, GUIDisplay, GUIName, styleOpts);
+            Window = GUILayout.Window(GetHashCode(), Window, GUIDisplay, Localizer.Format(GUIName), styleOpts);
         }
 
 
         void GUIDisplay(int windowID)
         {
             string s = $"{(sourceAntenna?.ParentNode as RACommNode)?.ParentVessel?.vesselName} {sourceAntenna?.ToStringShort()}";
-            GUILayout.Label($"Antenna: {(sourceAntenna is RealAntenna ? s : "Not Selected")}");
+            GUILayout.Label(Localizer.Format("#RealAntennas_AntennaControlCenter_sourceAntenna", (sourceAntenna is RealAntenna ? s : Localizer.Format("#RealAntennas_AntennaControlCenter_NotSelected"))));//$"Antenna: {(sourceAntenna is RealAntenna ? s : "Not Selected")}"
             GUILayout.BeginHorizontal();
             GUILayout.BeginVertical();
-            if (GUILayout.Button($"Source Sort Mode: {sourceSortMode}"))
+            if (GUILayout.Button(Localizer.Format("#RealAntennas_AntennaControlCenter_SourceSortMode", sourceSortMode)))//$"Source Sort Mode: {sourceSortMode}"
             {
                 //(i1, i2) => i1.ToString().CompareTo(i2.ToString())
                 sourceSortMode = (SortMode)(((int)(sourceSortMode + 1)) % System.Enum.GetNames(typeof(SortMode)).Length);
@@ -68,7 +69,7 @@ namespace RealAntennas
             GUILayout.EndVertical();
 
             GUILayout.BeginVertical();
-            if (GUILayout.Button($"Target Sort Mode: {targetSortMode}"))
+            if (GUILayout.Button(Localizer.Format("#RealAntennas_AntennaControlCenter_TargetSortMode", targetSortMode)))//$"Target Sort Mode: {}"
             {
                 targetSortMode = (SortMode)(((int)(targetSortMode + 1)) % System.Enum.GetNames(typeof(SortMode)).Length);
                 SortList(targetVessels, targetSortMode);

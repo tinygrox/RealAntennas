@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using KSP.Localization;
 
 namespace RealAntennas
 {
@@ -40,7 +41,7 @@ namespace RealAntennas
         {
             if (showGUI)
             {
-                Window = GUILayout.Window(GetHashCode(), Window, GUIDisplay, "Antenna Planning Target", GUILayout.Width(GUIWidth), GUILayout.Height(GUIHeight));
+                Window = GUILayout.Window(GetHashCode(), Window, GUIDisplay, Localizer.Format("#RealAntennas_AntennaPlanningTarget"), GUILayout.Width(GUIWidth), GUILayout.Height(GUIHeight));//"Antenna Planning Target"
             }
         }
 
@@ -60,10 +61,10 @@ namespace RealAntennas
             if (HighLogic.LoadedSceneIsEditor)
             {
                 GUILayout.BeginHorizontal();
-                GUILayout.Label($"Ground Station TechLevel: {fTechLevel}");
+                GUILayout.Label(Localizer.Format("#RealAntennas_GroundStationTechLevel", fTechLevel));//$"Ground Station TechLevel: {fTechLevel}"
                 fTechLevel = GUILayout.HorizontalSlider(Mathf.RoundToInt(fTechLevel), 0, RACommNetScenario.MaxTL);
                 fTechLevel = Mathf.RoundToInt(fTechLevel);
-                if (GUILayout.Button("Apply"))
+                if (GUILayout.Button(Localizer.Format("#RealAntennas_Button_Apply")))//"Apply"
                 {
                     HashSet<string> names = GetActiveCommNetHomeToggles();
                     parent.ConfigTarget(Planetarium.fetch.Home.name, Planetarium.fetch.Home);
@@ -79,23 +80,23 @@ namespace RealAntennas
             scroller = GUILayout.BeginScrollView(scroller);
             if (HighLogic.LoadedSceneIsEditor)
             {
-                showProto = GUILayout.Toggle(showProto, "Vessel Antennas");
+                showProto = GUILayout.Toggle(showProto, Localizer.Format(" #RealAntennas_VesselAntennas"));//"Vessel Antennas"
                 if (showProto) GUI_HandleProtoVessels();
 
                 GUI_HandleShipConstruct();
             }
             else
             {
-                showVessels = GUILayout.Toggle(showVessels, "Vessel Antennas");
+                showVessels = GUILayout.Toggle(showVessels, Localizer.Format(" #RealAntennas_VesselAntennas"));//"Vessel Antennas"
                 if (showVessels) GUI_HandleVessels();
             }
-            showBodies = GUILayout.Toggle(showBodies, "Celestial Bodies");
+            showBodies = GUILayout.Toggle(showBodies, Localizer.Format("#RealAntennas_CelestialBodies"));//"Celestial Bodies"
             if (showBodies) GUI_HandleBodies();
-            showGroundStations = GUILayout.Toggle(showGroundStations, "Ground Stations");
+            showGroundStations = GUILayout.Toggle(showGroundStations, Localizer.Format("#RealAntennas_GroundStations"));//"Ground Stations"
             if (showGroundStations) GUI_HandleGroundStations();
             GUILayout.EndScrollView();
 
-            if (GUILayout.Button("Close")) showGUI = false;
+            if (GUILayout.Button(Localizer.Format("#RealAntennas_Button_Close"))) showGUI = false;//"Close"
             GUI.DragWindow();
         }
 
@@ -186,7 +187,7 @@ namespace RealAntennas
             selectedList.AddRange(Planetarium.fetch.Sun.orbitingBodies);
             foreach (CelestialBody body in selectedList)
             {
-                AntennaButton($"{body.name}", body, INDENT / 2);
+                AntennaButton($"{body.displayName}", body, INDENT / 2);
             }
         }
 

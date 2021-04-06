@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using KSP.Localization;
 
 namespace RealAntennas
 {
@@ -46,15 +47,15 @@ namespace RealAntennas
             GUILayout.Label($"{net}");
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label($"Vessels: {vessels}");
-            GUILayout.Label($"GroundStations: {groundStations}");
-            GUILayout.Label($"Antennas/vessel: {(float)antennas / vessels:F1}");
+            GUILayout.Label(Localizer.Format("#RealAntennas_Label_Vessels", vessels));//$"Vessels: {vessels}"
+            GUILayout.Label(Localizer.Format("#RealAntennas_Label_GroundStations", groundStations));//$"GroundStations: {groundStations}"
+            GUILayout.Label(Localizer.Format("#RealAntennas_Label_Antennas_Vessel", $"{(float)antennas / vessels:F1}"));//$"Antennas/vessel: {}"
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Name", GUILayout.ExpandWidth(true));
-            GUILayout.Label("Iterations", GUILayout.ExpandWidth(true));
-            GUILayout.Label("Avg Time (ms)", GUILayout.ExpandWidth(true));
-            GUILayout.Label("Runs/sec", GUILayout.ExpandWidth(true));
+            GUILayout.Label(Localizer.Format("#RealAntennas_Label_Name"), GUILayout.ExpandWidth(true));//"Name"
+            GUILayout.Label(Localizer.Format("#RealAntennas_Label_Iterations"), GUILayout.ExpandWidth(true));//"Iterations"
+            GUILayout.Label(Localizer.Format("#RealAntennas_Label_AvgTime"), GUILayout.ExpandWidth(true));//"Avg Time (ms)"
+            GUILayout.Label(Localizer.Format("#RealAntennas_Label_RunTime"), GUILayout.ExpandWidth(true));//"Runs/sec"
             GUILayout.EndHorizontal();
             foreach (KeyValuePair<string, MetricsElement> kvp in scen.metrics.data)
             {
@@ -70,17 +71,17 @@ namespace RealAntennas
             if (MapView.fetch is MapView map && MapView.MapIsEnabled)
             {
                 MapUI.NetUIConfigurationWindow win = scen.UI.configWindow;
-                if (GUILayout.Button($"{(win.showUI ? "Hide" : "Show")} Config Window"))
+                if (GUILayout.Button(Localizer.Format("#RealAntennas_Label_HideOrShowWindow", $"{(win.showUI ? Localizer.Format("#RealAntennas_Label_Hide") : Localizer.Format("#RealAntennas_Label_Show"))}")))//$"{(win.showUI ? "Hide" : "Show")} Config Window"
                 {
                     if (win.showUI) win.HideWindow(); else win.ShowWindow();
                 }
             }
 
-            if (antennaConsoleGO is null && GUILayout.Button("Launch Control Console"))
+            if (antennaConsoleGO is null && GUILayout.Button(Localizer.Format("#RealAntennas_Button_LaunchControlConsole")))//"Launch Control Console"
             {
                 antennaConsoleGO = new GameObject();
                 antennaConsoleGO.AddComponent(typeof(RemoteAntennaControlUI));
-            } else if (antennaConsoleGO is GameObject && GUILayout.Button("Close Control Console")) {
+            } else if (antennaConsoleGO is GameObject && GUILayout.Button(Localizer.Format("#RealAntennas_Button_CloseControlConsole"))) {//"Close Control Console"
                 antennaConsoleGO.DestroyGameObject();
                 antennaConsoleGO = null;
             }

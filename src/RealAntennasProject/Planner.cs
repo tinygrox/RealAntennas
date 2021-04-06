@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using KSP.Localization;
 
 namespace RealAntennas
 {
@@ -81,7 +82,7 @@ namespace RealAntennas
                     }
                 } else
                 {
-                    SetPlanningResult("No compatible ground station", "Check TS upgrade level!");
+                    SetPlanningResult(Localizer.Format("#RealAntennas_NoCompatibleStation"), Localizer.Format("#RealAntennas_CheckTSLevel"));//"No compatible ground station""Check TS upgrade level!"
                 }
             } else if (PlannerTarget is RealAntenna ra)
             {
@@ -132,7 +133,7 @@ namespace RealAntennas
         {
             if (parent.Deployable && !parent.Deployed)
             {
-                ScreenMessages.PostScreenMessage("You must deploy this antenna for the planner to work", 8f, ScreenMessageStyle.UPPER_CENTER, Color.red);
+                ScreenMessages.PostScreenMessage(Localizer.Format("#RealAntennas_DeployFirst"), 8f, ScreenMessageStyle.UPPER_CENTER, Color.red);//"You must deploy this antenna for the planner to work"
             }
         }
     }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using UnityEngine;
+using KSP.Localization;
 
 namespace RealAntennas.MapUI
 {
@@ -42,12 +43,12 @@ namespace RealAntennas.MapUI
             GUILayout.Label($"{RACommNetScenario.assembly.GetName().Name} v{RACommNetScenario.info.FileVersion}");
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button($"ConeMode: {parent.drawConesMode}"))
+            if (GUILayout.Button(Localizer.Format("#RealAntennas_ConeMode", parent.drawConesMode)))//$"ConeMode: {parent.drawConesMode}"
             {
                 parent.drawConesMode++;
                 parent.drawConesMode = (RACommNetUI.DrawConesMode) ((int)parent.drawConesMode % Enum.GetValues(typeof(RACommNetUI.DrawConesMode)).Length);
             }
-            if (GUILayout.Button($"Link End Mode: {parent.linkEndPerspective}"))
+            if (GUILayout.Button(Localizer.Format("#RealAntennas_LinkEndMode", parent.linkEndPerspective)))//$"Link End Mode: {parent.linkEndPerspective}"
             {
                 parent.linkEndPerspective++;
                 parent.linkEndPerspective = (RACommNetUI.RadioPerspective)((int)parent.linkEndPerspective % Enum.GetValues(typeof(RACommNetUI.RadioPerspective)).Length);
@@ -62,17 +63,17 @@ namespace RealAntennas.MapUI
             */
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button($"TargetLine: {parent.drawTarget}"))
+            if (GUILayout.Button(Localizer.Format("#RealAntennas_TargetLine", parent.drawTarget)))//$"TargetLine: {parent.drawTarget}"
                 parent.drawTarget = !parent.drawTarget;
-            if (GUILayout.Button($"3dB Cones: {parent.drawCone3}"))
+            if (GUILayout.Button(Localizer.Format("#RealAntennas_3dBCones", parent.drawCone3)))//$"3dB Cones: {parent.drawCone3}"
                 parent.drawCone3 = !parent.drawCone3;
-            if (GUILayout.Button($"10dB Cones: {parent.drawCone10}"))
+            if (GUILayout.Button(Localizer.Format("#RealAntennas_10dBCones", parent.drawCone10)))//$"10dB Cones: {parent.drawCone10}"
                 parent.drawCone10 = !parent.drawCone10;
             GUILayout.EndHorizontal();
 
 
             GUILayout.BeginVertical();
-            GUILayout.Label($"3D Drawing Distance {MapView.MapCamera.Distance:F0}, Max: {MapView.fetch.max3DlineDrawDist:F1}");
+            GUILayout.Label(Localizer.Format("#RealAntennas_3DDrawingDistance", $"{MapView.MapCamera.Distance:F0}", $"{MapView.fetch.max3DlineDrawDist:F1}"));//$"3D Drawing Distance , Max: {MapView.fetch.max3DlineDrawDist:F1}"
             MapView.fetch.max3DlineDrawDist = GUILayout.HorizontalSlider(MapView.fetch.max3DlineDrawDist, 100, 1e5f);
             GUILayout.EndVertical();
 
@@ -146,7 +147,7 @@ namespace RealAntennas.MapUI
             GUILayout.BeginHorizontal();
 
             GUILayout.BeginVertical();
-            GUILayout.Label($"Link Line Brightness: {parent.lineScaleWidth:F1}");
+            GUILayout.Label(Localizer.Format("#RealAntennas_LinkLineBrightness", $"{parent.lineScaleWidth:F1}"));//$"Link Line Brightness: {parent.lineScaleWidth:F1}"
             parent.lineScaleWidth = GUILayout.HorizontalSlider(parent.lineScaleWidth, 1, 10);
             GUILayout.EndVertical();
             /*
@@ -159,12 +160,12 @@ namespace RealAntennas.MapUI
 
             GUILayout.BeginHorizontal();
             GUILayout.BeginVertical();
-            GUILayout.Label("Cone Circles");
+            GUILayout.Label(Localizer.Format("#RealAntennas_ConeCircles"));//"Cone Circles"
             fCircles = GUILayout.HorizontalSlider(Convert.ToInt32(fCircles), 0, 8);
             parent.numCircles = Convert.ToInt32(fCircles);
             GUILayout.EndVertical();
             GUILayout.BeginVertical();
-            GUILayout.Label("Cone Opacity");
+            GUILayout.Label(Localizer.Format("#RealAntennas_ConeOpacity"));//"Cone Opacity"
             coneOpacity = GUILayout.HorizontalSlider(coneOpacity, 0, 1);
             parent.ConeOpacity = Mathf.Clamp01(coneOpacity);
             GUILayout.EndVertical();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
+using KSP.Localization;
 
 namespace RealAntennas
 {
@@ -63,10 +64,10 @@ namespace RealAntennas
             yield return new WaitForSeconds(2);
             while (!CommNetEnabled)
             {
-                ScreenMessages.PostScreenMessage("RealAntennas: CommNet Disabled in Difficulty Settings", DisabledNotifyInterval / 2, ScreenMessageStyle.UPPER_CENTER, Color.yellow);
+                ScreenMessages.PostScreenMessage(Localizer.Format("#RealAntennas_CommNetDisabled"), DisabledNotifyInterval / 2, ScreenMessageStyle.UPPER_CENTER, Color.yellow);//"RealAntennas: CommNet Disabled in Difficulty Settings"
                 yield return new WaitForSeconds(DisabledNotifyInterval);
             }
-            ScreenMessages.PostScreenMessage("RealAntennas: CommNet enabled, requires scene change to take effect", 10, ScreenMessageStyle.UPPER_CENTER, Color.yellow);
+            ScreenMessages.PostScreenMessage(Localizer.Format("#RealAntennas_CommNetEnabled"), 10, ScreenMessageStyle.UPPER_CENTER, Color.yellow);//"RealAntennas: CommNet enabled, requires scene change to take effect"
         }
 
 
